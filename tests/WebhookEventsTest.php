@@ -12,7 +12,7 @@ final class WebhookEventsTest extends TestCase
     public function testCatalogIsCompleteAndUnique(): void
     {
         // Tracks the spec's event enum (regen on scripts/sync_core.php).
-        $this->assertCount(69, WebhookEvents::ALL);
+        $this->assertCount(72, WebhookEvents::ALL);
         $this->assertSame(WebhookEvents::ALL, array_values(array_unique(WebhookEvents::ALL)));
         foreach (['transaction.approved', 'subscription.paused', 'checkout.session.completed', 'webhook.ping'] as $t) {
             $this->assertContains($t, WebhookEvents::ALL);

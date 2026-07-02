@@ -36,6 +36,7 @@ use \Selectwin\ObjectSerializer;
  * CreateTransactionRequestBilling Class Doc Comment
  *
  * @category Class
+ * @description **Regra:** Obrigatório quando &#x60;payment.method&#x3D;billet&#x60; (endereço do pagador): &#x60;billing.address.id&#x60; (salvo) ou endereço inline com postcode + street + number.
  * @package  Selectwin
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech

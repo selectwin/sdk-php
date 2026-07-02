@@ -63,7 +63,7 @@ class CreateSubscriptionRequest implements ModelInterface, ArrayAccess, \JsonSer
         'customer' => '\Selectwin\Model\CreateSubscriptionRequestCustomer',
         'items' => '\Selectwin\Model\CreateSubscriptionRequestItemsInner[]',
         'payment' => '\Selectwin\Model\CreateSubscriptionRequestPayment',
-        'billing' => '\Selectwin\Model\CreateTransactionRequestBilling',
+        'billing' => '\Selectwin\Model\CreateSubscriptionRequestBilling',
         'frequency' => 'string',
         'frequency_count' => 'int',
         'exact_day' => 'int',
@@ -698,7 +698,7 @@ class CreateSubscriptionRequest implements ModelInterface, ArrayAccess, \JsonSer
     /**
      * Gets billing
      *
-     * @return \Selectwin\Model\CreateTransactionRequestBilling|null
+     * @return \Selectwin\Model\CreateSubscriptionRequestBilling|null
      */
     public function getBilling()
     {
@@ -708,7 +708,7 @@ class CreateSubscriptionRequest implements ModelInterface, ArrayAccess, \JsonSer
     /**
      * Sets billing
      *
-     * @param \Selectwin\Model\CreateTransactionRequestBilling|null $billing billing
+     * @param \Selectwin\Model\CreateSubscriptionRequestBilling|null $billing billing
      *
      * @return self
      */

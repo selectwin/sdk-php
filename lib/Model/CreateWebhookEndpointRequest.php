@@ -321,6 +321,9 @@ class CreateWebhookEndpointRequest implements ModelInterface, ArrayAccess, \Json
     public const EVENTS_SELLER_ANALYZING = 'seller.analyzing';
     public const EVENTS_SELLER_APPROVED = 'seller.approved';
     public const EVENTS_SELLER_REFUSED = 'seller.refused';
+    public const EVENTS_SELLER_BLOCKED = 'seller.blocked';
+    public const EVENTS_SELLER_DISABLED = 'seller.disabled';
+    public const EVENTS_SELLER_REINSTATED = 'seller.reinstated';
     public const EVENTS_WITHDRAWAL_CREATED = 'withdrawal.created';
     public const EVENTS_WITHDRAWAL_PENDING = 'withdrawal.pending';
     public const EVENTS_WITHDRAWAL_CONFIRMED = 'withdrawal.confirmed';
@@ -399,6 +402,9 @@ class CreateWebhookEndpointRequest implements ModelInterface, ArrayAccess, \Json
             self::EVENTS_SELLER_ANALYZING,
             self::EVENTS_SELLER_APPROVED,
             self::EVENTS_SELLER_REFUSED,
+            self::EVENTS_SELLER_BLOCKED,
+            self::EVENTS_SELLER_DISABLED,
+            self::EVENTS_SELLER_REINSTATED,
             self::EVENTS_WITHDRAWAL_CREATED,
             self::EVENTS_WITHDRAWAL_PENDING,
             self::EVENTS_WITHDRAWAL_CONFIRMED,

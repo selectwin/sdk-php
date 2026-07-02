@@ -36,6 +36,7 @@ use \Selectwin\ObjectSerializer;
  * CreateSubscriptionRequestPayment Class Doc Comment
  *
  * @category Class
+ * @description **Regra:** Com &#x60;method&#x3D;credit&#x60;, &#x60;card&#x60; é **obrigatório** (&#x60;card.id&#x60; de um cartão salvo, ou cartão completo inline: holderName, expirationMonth, expirationYear, numbering, securityCode).
  * @package  Selectwin
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech

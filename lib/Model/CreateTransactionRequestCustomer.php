@@ -36,6 +36,7 @@ use \Selectwin\ObjectSerializer;
  * CreateTransactionRequestCustomer Class Doc Comment
  *
  * @category Class
+ * @description **Regra:** Obrigatório informar &#x60;id&#x60; (cliente salvo) **OU** os dados inline &#x60;firstName&#x60; + &#x60;lastName&#x60; + &#x60;email&#x60; (a API faz find-or-create). Enviar &#x60;customer: {}&#x60; é rejeitado.
  * @package  Selectwin
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech

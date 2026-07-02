@@ -84,6 +84,7 @@ class GetTransaction200Response implements ModelInterface, ArrayAccess, \JsonSer
         'timeline' => '\Selectwin\Model\CreateTransaction201ResponseTimelineInner[]',
         'callback' => '\Selectwin\Model\CreateTransaction201ResponseCallback',
         'metadata' => 'mixed',
+        'processing_time_ms' => 'int',
         'updated_at' => 'string',
         'created_at' => 'string',
         'merchant' => '\Selectwin\Model\ListCustomers200ResponseDataInnerMerchant',
@@ -124,6 +125,7 @@ class GetTransaction200Response implements ModelInterface, ArrayAccess, \JsonSer
         'timeline' => null,
         'callback' => null,
         'metadata' => null,
+        'processing_time_ms' => null,
         'updated_at' => null,
         'created_at' => null,
         'merchant' => null,
@@ -162,6 +164,7 @@ class GetTransaction200Response implements ModelInterface, ArrayAccess, \JsonSer
         'timeline' => false,
         'callback' => false,
         'metadata' => true,
+        'processing_time_ms' => false,
         'updated_at' => false,
         'created_at' => false,
         'merchant' => false,
@@ -280,6 +283,7 @@ class GetTransaction200Response implements ModelInterface, ArrayAccess, \JsonSer
         'timeline' => 'timeline',
         'callback' => 'callback',
         'metadata' => 'metadata',
+        'processing_time_ms' => 'processingTimeMs',
         'updated_at' => 'updatedAt',
         'created_at' => 'createdAt',
         'merchant' => 'merchant',
@@ -318,6 +322,7 @@ class GetTransaction200Response implements ModelInterface, ArrayAccess, \JsonSer
         'timeline' => 'setTimeline',
         'callback' => 'setCallback',
         'metadata' => 'setMetadata',
+        'processing_time_ms' => 'setProcessingTimeMs',
         'updated_at' => 'setUpdatedAt',
         'created_at' => 'setCreatedAt',
         'merchant' => 'setMerchant',
@@ -356,6 +361,7 @@ class GetTransaction200Response implements ModelInterface, ArrayAccess, \JsonSer
         'timeline' => 'getTimeline',
         'callback' => 'getCallback',
         'metadata' => 'getMetadata',
+        'processing_time_ms' => 'getProcessingTimeMs',
         'updated_at' => 'getUpdatedAt',
         'created_at' => 'getCreatedAt',
         'merchant' => 'getMerchant',
@@ -497,6 +503,7 @@ class GetTransaction200Response implements ModelInterface, ArrayAccess, \JsonSer
         $this->setIfExists('timeline', $data ?? [], null);
         $this->setIfExists('callback', $data ?? [], null);
         $this->setIfExists('metadata', $data ?? [], null);
+        $this->setIfExists('processing_time_ms', $data ?? [], null);
         $this->setIfExists('updated_at', $data ?? [], null);
         $this->setIfExists('created_at', $data ?? [], null);
         $this->setIfExists('merchant', $data ?? [], null);
@@ -623,6 +630,9 @@ class GetTransaction200Response implements ModelInterface, ArrayAccess, \JsonSer
         }
         if ($this->container['callback'] === null) {
             $invalidProperties[] = "'callback' can't be null";
+        }
+        if ($this->container['processing_time_ms'] === null) {
+            $invalidProperties[] = "'processing_time_ms' can't be null";
         }
         if ($this->container['updated_at'] === null) {
             $invalidProperties[] = "'updated_at' can't be null";
@@ -1382,6 +1392,33 @@ class GetTransaction200Response implements ModelInterface, ArrayAccess, \JsonSer
             }
         }
         $this->container['metadata'] = $metadata;
+
+        return $this;
+    }
+
+    /**
+     * Gets processing_time_ms
+     *
+     * @return int
+     */
+    public function getProcessingTimeMs()
+    {
+        return $this->container['processing_time_ms'];
+    }
+
+    /**
+     * Sets processing_time_ms
+     *
+     * @param int $processing_time_ms processing_time_ms
+     *
+     * @return self
+     */
+    public function setProcessingTimeMs($processing_time_ms)
+    {
+        if (is_null($processing_time_ms)) {
+            throw new \InvalidArgumentException('non-nullable processing_time_ms cannot be null');
+        }
+        $this->container['processing_time_ms'] = $processing_time_ms;
 
         return $this;
     }
