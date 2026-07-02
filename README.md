@@ -37,7 +37,7 @@ try {
 }
 ```
 
-Every resource exposes **Stripe-style aliases** (`create`, `retrieve`, `update`, `list`,
+Every resource exposes **Concise aliases** (`create`, `retrieve`, `update`, `list`,
 `delete`, plus verbs like `$sw->subscriptions->pause('subs_…')`). The full generated API is
 always reachable via `->raw()`:
 
@@ -82,7 +82,7 @@ The package is a **generated core** (from the OpenAPI v2.0.0 spec, namespace `Se
 / `Selectwin\Model`) + a **hand-written DX shell**:
 
 - **Typed client** — `new SelectwinClient($key)` → `$sw->transactions`, `$sw->subscriptions`, …
-- **Stripe-style aliases** per resource accepting an array or a generated model; `->raw()` for
+- **Concise aliases** per resource accepting an array or a generated model; `->raw()` for
   the full generated surface.
 - **Typed exceptions** by HTTP status / `error.code`: `CardException` (402,
   `getDisplayMessage()`/`isReversible()`), `ValidationException` (`getParams()`),
@@ -102,7 +102,7 @@ prefix (`sk_test_` / `sk_live_`).
 lib/                       # openapi-generator core (Selectwin\Api, \Model, Configuration…) — synced; DO NOT edit
 src/
   SelectwinClient.php      # the client — wires Configuration + Guzzle into every resource
-  Resource/                # GENERATED Stripe-style resources (gen_resources.php) — DO NOT edit
+  Resource/                # GENERATED resource wrappers (gen_resources.php) — DO NOT edit
   Exception/Exceptions.php # typed exception hierarchy + ErrorFactory
   Http/ClientFactory.php   # Guzzle handler stack (retries) + idempotency middleware
   Pagination/Paginator.php

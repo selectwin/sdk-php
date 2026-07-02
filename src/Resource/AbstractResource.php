@@ -9,7 +9,7 @@ use Selectwin\Exception\ErrorFactory;
 use Selectwin\ObjectSerializer;
 
 /**
- * Base for the generated Stripe-style resources. Wraps a generated core Api,
+ * Base for the generated resource wrappers. Wraps a generated core Api,
  * translating {@see CoreApiException} into the typed SDK exception hierarchy and
  * coercing array request bodies into their generated models.
  */
