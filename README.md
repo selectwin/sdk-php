@@ -125,6 +125,19 @@ vendor/bin/phpunit --testsuite unit
 SELECTWIN_SANDBOX_KEY=sk_test_... vendor/bin/phpunit --testsuite integration
 ```
 
+## Publishing (Packagist)
+
+Packagist serves versions straight from git tags — nothing is uploaded. One-time setup:
+
+1. Sign in to <https://packagist.org> with GitHub and **Submit** the repo URL
+   (`https://github.com/selectwin/sdk-php`). Packagist installs a webhook so every
+   pushed tag becomes a new version automatically.
+2. `git tag v0.1.0 && git push origin v0.1.0`.
+
+`.github/workflows/release.yml` runs the test suite on each tag and (optionally, if the
+`PACKAGIST_USERNAME` / `PACKAGIST_API_TOKEN` secrets are set) pings Packagist to refresh
+immediately — otherwise it relies on the webhook.
+
 ## Roadmap
 
-- Publish on Packagist once the API stabilises; a Laravel package (`selectwin/laravel`) on top.
+- Packagist release (above) once the API stabilises; a Laravel package (`selectwin/laravel`) on top.

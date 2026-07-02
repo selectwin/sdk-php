@@ -1,0 +1,50 @@
+name: Release (Packagist)
+
+# Packagist publishes from git tags — versions are discovered from the repo, not
+# uploaded. On a tag it: (1) runs the test suite, then (2) pings Packagist to force
+# an immediate refresh. If the GitHub↔Packagist webhook is configured (the normal
+# setup), the ping is optional and this simply no-ops when the secrets are absent.
+#
+# One-time setup: submit the repo once at https://packagist.org (Submit → the repo
+# URL) while signed in with GitHub — Packagist then auto-updates on every tag.
+# Optional secrets for the force-refresh ping: PACKAGIST_USERNAME, PACKAGIST_API_TOKEN.
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: json, mbstring
+          coverage: none
+      - run: composer validate --strict
+      - run: composer install --no-interaction --prefer-dist
+      - run: vendor/bin/phpunit
+
+  notify-packagist:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Packagist (force update)
+        env:
+          PACKAGIST_USERNAME: ${{ secrets.PACKAGIST_USERNAME }}
+          PACKAGIST_API_TOKEN: ${{ secrets.PACKAGIST_API_TOKEN }}
+        run: |
+          if [ -z "$PACKAGIST_USERNAME" ] || [ -z "$PACKAGIST_API_TOKEN" ]; then
+            echo "Packagist secrets not set — relying on the GitHub↔Packagist webhook (auto-updates on tag). Nothing to do."
+            exit 0
+          fi
+          curl -sf -XPOST -H 'content-type:application/json' \
+            "https://packagist.org/api/update-package?username=${PACKAGIST_USERNAME}&apiToken=${PACKAGIST_API_TOKEN}" \
+            -d '{"repository":{"url":"https://github.com/selectwin/sdk-php"}}'
+          echo "Pinged Packagist to refresh selectwin/sdk."
