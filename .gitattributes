@@ -1,0 +1,15 @@
+# Normalise line endings: LF in the repo and on checkout, on every OS.
+* text=auto eol=lf
+
+# Collapse generated files in GitHub diffs / exclude from language stats.
+lib/**                     linguist-generated=true
+src/Resource/*Resource.php linguist-generated=true
+src/WebhookEvents.php      linguist-generated=true
+
+# Keep the published package (composer archive) lean.
+/tests        export-ignore
+/.github      export-ignore
+/scripts      export-ignore
+/phpunit.xml  export-ignore
+/.gitattributes export-ignore
+/.gitignore   export-ignore

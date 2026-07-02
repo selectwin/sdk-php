@@ -1,0 +1,29 @@
+name: Integration (sandbox)
+
+# Hits the real Selectwin sandbox API. Runs on a schedule + on demand, NOT on
+# every PR. Skips gracefully when the key secret is absent.
+on:
+  schedule:
+    - cron: '0 6 * * *' # daily 06:00 UTC
+  workflow_dispatch: {}
+
+concurrency:
+  group: integration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integration:
+    name: sandbox integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: json, mbstring, curl
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist
+      - name: Integration tests
+        env:
+          SELECTWIN_SANDBOX_KEY: ${{ secrets.SELECTWIN_SANDBOX_KEY }}
+        run: vendor/bin/phpunit --testsuite integration --no-coverage
