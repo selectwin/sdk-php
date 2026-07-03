@@ -39,8 +39,28 @@ use Selectwin\Webhook\WebhookSignature;
  */
 final class SelectwinClient
 {
-    public const VERSION = '0.1.0';
     private const DEFAULT_BASE_URL = 'https://api.selectwin.io';
+
+    /**
+     * SDK version — read from Composer's installed metadata (single source of truth =
+     * the git tag / composer.json), so the User-Agent never drifts from the release.
+     * Never hardcode a version constant here; it only drifts. Falls back to
+     * `0.0.0-dev` when the package isn't installed via Composer.
+     */
+    public static function version(): string
+    {
+        if (
+            class_exists(\Composer\InstalledVersions::class)
+            && \Composer\InstalledVersions::isInstalled('selectwin/sdk')
+        ) {
+            $v = \Composer\InstalledVersions::getPrettyVersion('selectwin/sdk');
+            if (is_string($v) && $v !== '') {
+                return ltrim($v, 'v');
+            }
+        }
+
+        return '0.0.0-dev';
+    }
 
     private Configuration $config;
     private Client $http;
@@ -59,7 +79,7 @@ final class SelectwinClient
 
         $this->config = (new Configuration())
             ->setHost($options['base_url'] ?? self::DEFAULT_BASE_URL)
-            ->setUserAgent($options['user_agent'] ?? ('selectwin-php/' . self::VERSION));
+            ->setUserAgent($options['user_agent'] ?? ('selectwin-php/' . self::version()));
         $this->config->setApiKey('selectkey', $apiKey); // Selectwin auth header
 
         $this->http = ClientFactory::create(
