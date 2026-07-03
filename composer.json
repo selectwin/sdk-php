@@ -3,7 +3,7 @@
     "description": "Official Selectwin PHP SDK — payments (card, PIX, boleto), subscriptions, webhooks.",
     "type": "library",
     "license": "MIT",
-    "homepage": "https://docs.selectwin.io",
+    "homepage": "https://selectwin.io/docs",
     "keywords": ["selectwin", "payments", "pix", "boleto", "subscriptions", "webhooks", "api", "sdk"],
     "authors": [{ "name": "Selectwin", "email": "help@selectwin.io" }],
     "require": {
