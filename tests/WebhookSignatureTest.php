@@ -99,6 +99,20 @@ final class WebhookSignatureTest extends TestCase
         ]);
     }
 
+    public function testMalformedV1Rejected(): void
+    {
+        // A v1 header present but unparseable (missing t, missing v1, or junk) must throw — never
+        // silently fall back to having checked only the legacy sha256= scheme (the body sig IS valid).
+        foreach (['t=1000000', 'v1=deadbeef', 'garbage'] as $bad) {
+            $this->assertThrows(fn () => WebhookSignature::constructEvent(
+                $this->payload,
+                $this->sign($this->payload),
+                self::SECRET,
+                ['signatureV1' => $bad],
+            ));
+        }
+    }
+
     private function assertThrows(callable $fn): void
     {
         try {

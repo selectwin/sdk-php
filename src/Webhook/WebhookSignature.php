@@ -50,19 +50,23 @@ final class WebhookSignature
             $parsed = self::parseV1($signatureV1);
             $t = $parsed['t'] ?? null;
             $v1 = $parsed['v1'] ?? null;
-            if ($t !== null && $v1 !== null) {
-                $expectedV1 = hash_hmac('sha256', $t . '.' . $rawBody, $secret);
-                if (!hash_equals($expectedV1, $v1)) {
-                    throw new SignatureVerificationException('Webhook v1 signature verification failed');
-                }
-                $tolerance = $options['tolerance'] ?? null;
-                if ($tolerance !== null) {
-                    $now = isset($options['now']) && is_callable($options['now'])
-                        ? (int) ($options['now'])()
-                        : time();
-                    if (abs($now - (int) $t) > $tolerance) {
-                        throw new SignatureVerificationException('Webhook timestamp is outside the tolerance window');
-                    }
+            // A v1 header that is PRESENT but can't be parsed into both t and v1 is malformed/tampered —
+            // reject it, never silently fall back to having only checked the legacy sha256= scheme
+            // (that's what the Node SDK and the WooCommerce plugin already do).
+            if ($t === null || $v1 === null) {
+                throw new SignatureVerificationException('Webhook v1 signature header is malformed');
+            }
+            $expectedV1 = hash_hmac('sha256', $t . '.' . $rawBody, $secret);
+            if (!hash_equals($expectedV1, $v1)) {
+                throw new SignatureVerificationException('Webhook v1 signature verification failed');
+            }
+            $tolerance = $options['tolerance'] ?? null;
+            if ($tolerance !== null) {
+                $now = isset($options['now']) && is_callable($options['now'])
+                    ? (int) ($options['now'])()
+                    : time();
+                if (abs($now - (int) $t) > $tolerance) {
+                    throw new SignatureVerificationException('Webhook timestamp is outside the tolerance window');
                 }
             }
         }
