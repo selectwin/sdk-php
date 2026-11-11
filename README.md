@@ -89,7 +89,10 @@ The package is a **generated core** (from the OpenAPI v2.0.0 spec, namespace `Se
   `RateLimitException` (`getRetryAfter()`), `AuthenticationException`, `PermissionDeniedException`,
   `NotFoundException`, `ConflictException`, `ApiErrorException`, `ApiConnectionException`.
 - **Auto-retries** (429/5xx/network) with backoff honouring `Retry-After` (Guzzle handler stack).
-- **Idempotency** — an `X-Idempotency-Key` is added to every mutation.
+- **Idempotency** — an `X-Idempotency-Key` is added to every mutation, and every retry of it carries the SAME key, so
+  a retried charge, refund or withdrawal is never applied twice.
+- **Safe paths** — a path parameter of `.` or `..` is refused before the request is sent (it would reach another
+  endpoint), and redirects are not followed (the API never redirects).
 - **Pagination** — `Paginator` (iterate, `first()`, `toArray()`, `pages()`).
 - **Webhook verification** — `constructEvent` (HMAC-SHA256 of the raw body, constant-time).
 

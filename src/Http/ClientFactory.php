@@ -24,17 +24,42 @@ final class ClientFactory
     public static function create(int $maxRetries = 2, ?float $timeout = 60.0, ?callable $handler = null): Client
     {
         $stack = HandlerStack::create($handler);
+        // ORDER MATTERS: the middleware pushed FIRST is the OUTERMOST. The path guard and the idempotency key run
+        // before the retry, so every attempt is the same request carrying the SAME key. Pushed after the retry (as it
+        // was until 11/11/2026), each attempt drew a new key: a 502/504 or a timeout after the API had already charged
+        // became a second charge (security sweep 31, P-1).
+        $stack->push(Middleware::mapRequest([self::class, 'rejectDotSegments']), 'selectwin_path_guard');
+        $stack->push(Middleware::mapRequest([self::class, 'addIdempotencyKey']), 'selectwin_idempotency');
         $stack->push(Middleware::retry(
             self::decider($maxRetries),
             self::delay(),
-        ));
-        $stack->push(Middleware::mapRequest([self::class, 'addIdempotencyKey']));
+        ), 'selectwin_retry');
 
-        $config = ['handler' => $stack, 'http_errors' => true];
+        // The API never redirects. Following one would carry the `selectkey` header to another host (Guzzle strips
+        // only Authorization and Cookie on a cross-host redirect) and could downgrade https to http.
+        $config = ['handler' => $stack, 'http_errors' => true, 'allow_redirects' => false];
         if ($timeout && $timeout > 0) {
             $config['timeout'] = $timeout;
         }
         return new Client($config);
+    }
+
+    /**
+     * A dot segment survives rawurlencode() and the URL is normalized before it reaches the API (curl and the edge
+     * both resolve `..`): `$sw->variants->delete('prd_1', '..')` would become DELETE /v1/products/prd_1 — another
+     * operation, with the seller's key. No Selectwin id is `.` or `..`, so a path carrying one is refused before it
+     * is sent (security sweep 31, S-1).
+     */
+    public static function rejectDotSegments(RequestInterface $request): RequestInterface
+    {
+        foreach (explode('/', $request->getUri()->getPath()) as $segment) {
+            if (preg_match('/^(?:\.|%2e){1,2}$/i', $segment) === 1) {
+                throw new \InvalidArgumentException(
+                    'Selectwin: a path parameter cannot be "." or ".." (the request would reach another endpoint).',
+                );
+            }
+        }
+        return $request;
     }
 
     public static function addIdempotencyKey(RequestInterface $request): RequestInterface
